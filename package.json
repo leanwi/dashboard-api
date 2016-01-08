@@ -1,0 +1,24 @@
+{
+  "name": "lean-dashboard",
+  "version": "1.0.0",
+  "description": "An application to agregate library data and make it available through an API.",
+  "main": "server.js",
+  "scripts": {
+    "test": "\"echo \\\"No tests :(\\\" && exit 1\""
+  },
+  "author": "Gus Falkenberg",
+  "license": "MIT",
+  "dependencies": {
+    "bcrypt-nodejs": "0.0.3",
+    "body-parser": "^1.14.1",
+    "csv": "^0.4.6",
+    "express": "^4.13.3",
+    "jwt-simple": "^0.4.0",
+    "moment": "^2.10.6",
+    "mongodb": "^2.1.3",
+    "morgan": "^1.6.1",
+    "mysql": "^2.9.0",
+    "prompt": "^0.2.14",
+    "underscore": "^1.8.3"
+  }
+}

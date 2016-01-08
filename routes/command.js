@@ -23,7 +23,7 @@ var command = {
           if(values.length > 0) {
             var tmpValues = _.map(_.first(values, 1000), function(value) {
               value.job_id = jobId;
-              value.action_date = moment(value.action_date, 'YYYY-MM-DD HH:mm:ss Z').toDate();
+              value.action_date = moment(value.action_date, 'YYYY-MM-DD HH:mm:ss').toDate();
               return value;
             });
             collection.insertMany(tmpValues, function(err, result) {

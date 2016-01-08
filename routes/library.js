@@ -3,7 +3,7 @@ var MongoClient = require('mongodb').MongoClient;
 var ObjectId = require('mongodb').ObjectId;
 var db;
 MongoClient.connect(config.mongoUrl, function(err, database) {
-  database = db;
+  db = database;
 });
 
 var library = {

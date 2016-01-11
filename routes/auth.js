@@ -24,7 +24,7 @@ var auth = {
       return;
     }
  
-    var dbUserObj = auth.validate(username, password, function(dbUserObj) {
+    auth.validate(username, password, function(dbUserObj) {
       if (!dbUserObj) { // If authentication fails, we send a 401 back
         res.status(401);
         res.json({

@@ -9,20 +9,12 @@ MongoClient.connect(config.mongoUrl, function(err, database) {
 
 var action = {
   getAll: function(req, res) {
-    var options = {
-      match: {}
-    };
-
+    var options = {match: {}};
     getMetric(options, req, res);
   },
   getLibrary: function(req, res) {
-    var options = {
-      match: {
-        library_code: req.params.code
-      }
-    };
-
-    getMetric(options.req, res);
+    var options = {match: {library_code: {$in: req.params.code.split(',')}}};
+    getMetric(options, req, res);
   }
 }
 
@@ -38,9 +30,9 @@ function getMetric(options, req, res) {
   options.match.action_date = {$gte: res.locals.start, $lte: res.locals.end};
 
   collection.aggregate([
-      {$match: options.match},
-      {$group: {_id: options.group, 'count': {$sum: 1}}},
-      {$sort: {_id: 1}}
+    {$match: options.match},
+    {$group: {_id: options.group, 'count': {$sum: 1}}},
+    {$sort: {_id: 1}}
   ]).toArray(function(err, result) {
     var responseObject = {
       url: req.url,

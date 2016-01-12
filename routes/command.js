@@ -22,6 +22,8 @@ var command = {
       db.collection(recordType).createIndex({
         action_date: -1,
         library_code: 1
+      }, {
+        background: true
       });
     }
     res.end('');

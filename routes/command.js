@@ -19,6 +19,10 @@ var command = {
     if(req.body) {
       var recordType = req.body.type;
       startJob(recordType, startUpload);
+      db.collection(recordType).createIndex({
+        action_date: -1,
+        library_code: 1
+      });
     }
     res.end('');
 

@@ -8,6 +8,10 @@ MongoClient.connect(config.mongoUrl, function(err, database) {
   db = database;
 });
 
+var JOB_ACTIVE = "Active";
+var JOB_ERROR = "Error";
+var JOB_COMPLETE = "Complete";
+
 var command = {
   upload: function(req, res) {
     var uploadSuccesses = 0;
@@ -32,17 +36,17 @@ var command = {
           collection.insertMany(tmpValues, function(err, result) {
             if(err) {
               console.log(err);
-              finish(2);
+              finish(JOB_ERROR);
             }
             else {
               uploadSuccesses += result.insertedCount;
-              updateJob(jobId, 1, uploadSuccesses);
+              updateJob(jobId, JOB_ACTIVE, uploadSuccesses);
               insert(_.rest(values, 1000));
             }
           });
         }
         else {
-          finish(0);
+          finish(JOB_COMPLETE);
         }
       }
 
@@ -58,7 +62,7 @@ function startJob(type, callback) {
     type: type,
     start: new Date(),
     updated: new Date(),
-    state: 1,
+    state: JOB_ACTIVE,
     processed: 0
   }, function(err, result) {
     if(err) {

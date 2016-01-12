@@ -13,6 +13,7 @@ var action = {
     getMetric(options, req, res);
   },
   getLibrary: function(req, res) {
+    // var options = {match: {library_code: req.params.code}};
     var options = {match: {library_code: {$in: req.params.code.split(',')}}};
     getMetric(options, req, res);
   }

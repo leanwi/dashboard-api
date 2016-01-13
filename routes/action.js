@@ -4,6 +4,7 @@ var MongoClient = require('mongodb').MongoClient;
 var ObjectId = require('mongodb').ObjectId;
 var db;
 MongoClient.connect(config.mongoUrl, function(err, database) {
+  if(err) {console.log(err);}
   db = database;
 });
 
@@ -13,7 +14,6 @@ var action = {
     getMetric(options, req, res);
   },
   getLibrary: function(req, res) {
-    // var options = {match: {library_code: req.params.code}};
     var options = {match: {library_code: {$in: req.params.code.split(',')}}};
     getMetric(options, req, res);
   }

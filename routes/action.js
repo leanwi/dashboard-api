@@ -20,34 +20,75 @@ var action = {
 }
 
 function getMetric(options, req, res) {
-  var metricInfo = req.params.action.split(':');
-  var collection = db.collection(metricInfo[0]);
-  if(metricInfo[1] === 'total') {
+  var metricInfo = parseMetricInfo(req.params.action);
+  var collection = db.collection(metricInfo.collection);
+  options.match.action_date = {$gte: res.locals.start, $lte: res.locals.end};
+  
+  if(metricInfo.metric === 'total' && req.params.code) {
     options.group = 'total';
+    collection.aggregate([
+      {$match: options.match},
+      {$group: {_id: options.group, 'count': {$sum: 1}}},
+      {$sort: {_id: 1}}
+    ]).toArray(function(err, result) {
+      var total = _.pluck(result, 'count')[0];
+      var rank = 0;
+      collection.aggregate([
+        {$match: {action_date: {$gte: res.locals.start, $lte: res.locals.end}}},
+        {$group: {_id: '$library_code', 'count': {$sum: 1}}},
+        {$sort: {'count': -1}}
+      ]).toArray(function(err, result) {
+        _.find(result, function(row, index) {
+          rank = index + 1;
+          return row.count === total;
+        });
+        sendResult(['total', 'rank'], [total, rank], req, res);
+      });       
+    });     
+  }
+  else if(metricInfo.metric === 'total') {
+    collection.aggregate([
+      {$match: options.match},
+      {$group: {_id: 'total', 'count': {$sum: 1}}},
+      {$sort: {_id: 1}}
+    ]).toArray(function(err, result) {
+      sendResult(_.pluck(result, '_id'), _.pluck(result, 'count'), req, res);      
+    });    
   }
   else {
-    options.group = "$metrics." + metricInfo[1];
+    options.group = "$metrics." + metricInfo.metric;
+    collection.aggregate([
+      {$match: options.match},
+      {$group: {_id: options.group, 'count': {$sum: 1}}},
+      {$sort: {_id: 1}}
+    ]).toArray(function(err, result) {
+      sendResult(_.pluck(result, '_id'), _.pluck(result, 'count'), req, res);
+    });    
   }
-  options.match.action_date = {$gte: res.locals.start, $lte: res.locals.end};
+}
 
-  collection.aggregate([
-    {$match: options.match},
-    {$group: {_id: options.group, 'count': {$sum: 1}}},
-    {$sort: {_id: 1}}
-  ]).toArray(function(err, result) {
-    var responseObject = {
-      url: req.url,
-      collection: metricInfo[0],
-      metric: metricInfo[1],
-      code: req.params.code,
-      start: req.params.start,
-      end: req.params.end,
-      labels: _.pluck(result, '_id'),
-      data: _.pluck(result, 'count')
-    };
+function sendResult(labels, data, req, res) {
+  var metricInfo = parseMetricInfo(req.params.action);
+  var responseObject = {
+    url: req.url,
+    collection: metricInfo.collection,
+    metric: metricInfo.metric,
+    code: req.params.code,
+    start: req.params.start,
+    end: req.params.end,
+    labels: labels,
+    data: data    
+  };
+  
+  res.send(JSON.stringify(responseObject));
+}
 
-    res.send(JSON.stringify(responseObject));
-  });
+function parseMetricInfo(metricString) {
+  var m = metricString.split(':');
+  return {
+    collection: m[0],
+    metric: m[1]
+  };
 }
 
 module.exports = action;

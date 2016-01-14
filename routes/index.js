@@ -10,7 +10,7 @@ var status = require('./status.js');
 /*
  * Routes that can be accessed by anyone
  */
-router.post('/login', auth.login);
+router.post('/api/v1/login', auth.login);
 router.get('/api/v1/libraries', library.getAll);
 router.get('/api/v1/libraries/:code', library.getOne);
 router.get('/api/v1/actions/:action/:start/:end', action.getAll); 

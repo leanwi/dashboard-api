@@ -8,7 +8,7 @@ MongoClient.connect(config.mongoUrl, function(err, database) {
 
 var library = {
   getAll: function(req, res) {
-    db.collection('libraries').find({excluded: "0"}).sort({displayname: 1}).toArray(function(err, results) {
+    db.collection('libraries').find({}).toArray(function(err, results) {
       if(err) {
         console.log(err);
         res.status(500).send('There was an error');

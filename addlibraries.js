@@ -52,9 +52,7 @@ function addLibraries(libraryArray) {
   var libraries = _.map(libraryArray.slice(1), function(row) {
     return {
       name: row[0],
-      displayname: row[1],
-      code: row[2],
-      excluded: row[3]
+      code: row[1]
     };
   });
   

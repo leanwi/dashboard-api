@@ -44,7 +44,6 @@ var status = {
     });
   },
   getRecentJobs: function(req, res) {
-    console.log(req.params.last);
     db.collection('jobs').find().sort({start: -1}).limit(parseInt(req.params.last) || 1000).toArray(function(err, results) {
       if(err) {
         console.log(err);

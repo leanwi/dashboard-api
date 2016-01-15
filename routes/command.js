@@ -43,7 +43,7 @@ var command = {
           else {
             uploadSuccesses += result.insertedCount;
             updateJob(jobId, JOB_ACTIVE, uploadSuccesses);
-            if(_.rest(values, CHUNK_SIZE)) {
+            if(_.rest(values, CHUNK_SIZE).length > 0) {
               insert(_.rest(values, CHUNK_SIZE));
             }
             else {

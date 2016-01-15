@@ -11,6 +11,8 @@ MongoClient.connect(config.mongoUrl, function(err, database) {
 var JOB_ACTIVE = "Active";
 var JOB_ERROR = "Error";
 var JOB_COMPLETE = "Complete";
+var CHUNK_SIZE = 1000;
+var DATE_FORMAT = 'YYYY-MM-DD HH:mm:ss';
 
 var command = {
   upload: function(req, res) {
@@ -19,12 +21,7 @@ var command = {
     if(req.body) {
       var recordType = req.body.type;
       startJob(recordType, startUpload);
-      db.collection(recordType).createIndex({
-        action_date: -1,
-        library_code: 1
-      }, {
-        background: true
-      });
+      db.collection(recordType).createIndex({action_date: -1, library_code: 1}, {background: true});
     }
     res.end('');
 
@@ -33,31 +30,27 @@ var command = {
       insert(req.body.rows);
 
       function insert(values) {
-        if(values.length > 0) {
-          var tmpValues = _.map(_.first(values, 1000), function(value) {
-            value.job_id = jobId;
-            value.action_date = moment(value.action_date, 'YYYY-MM-DD HH:mm:ss').toDate();
-            return value;
-          });
-          collection.insertMany(tmpValues, function(err, result) {
-            if(err) {
-              console.log(err);
-              finish(JOB_ERROR);
+        var tmpValues = _.map(_.first(values, CHUNK_SIZE), function(value) {
+          value.job_id = jobId;
+          value.action_date = moment(value.action_date, DATE_FORMAT).toDate();
+          return value;
+        });
+        collection.insertMany(tmpValues, function(err, result) {
+          if(err) {
+            console.log(err);
+            updateJob(jobId, JOB_ERROR, uploadSuccesses);
+          }
+          else {
+            uploadSuccesses += result.insertedCount;
+            updateJob(jobId, JOB_ACTIVE, uploadSuccesses);
+            if(_.rest(values, CHUNK_SIZE)) {
+              insert(_.rest(values, CHUNK_SIZE));
             }
             else {
-              uploadSuccesses += result.insertedCount;
-              updateJob(jobId, JOB_ACTIVE, uploadSuccesses);
-              insert(_.rest(values, 1000));
+              updateJob(jobId, JOB_COMPLETE, uploadSuccesses);
             }
-          });
-        }
-        else {
-          finish(JOB_COMPLETE);
-        }
-      }
-
-      function finish(state) {
-        updateJob(jobId, state, uploadSuccesses);
+          }
+        });
       }
     }
   },

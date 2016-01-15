@@ -21,8 +21,8 @@ router.get('/api/v1/actions/:action/:start/:end/:code', action.getLibrary);
  */
 router.get('/api/v1/status/jobs', status.getAllJobs);
 router.get('/api/v1/status/jobs/active', status.getActiveJobs);
-router.get('/api/v1/status/jobs/failed/:days?', status.getFailedJobs);
-router.get('/api/v1/status/jobs/recent/:days?', status.getRecentJobs);
+router.get('/api/v1/status/jobs/failed/:last?', status.getFailedJobs);
+router.get('/api/v1/status/jobs/recent/:last?', status.getRecentJobs);
 router.get('/api/v1/status/action-metric-types/:type', status.getOneActionMetricType);
 router.post('/api/v1/commands/upload', command.upload);
  

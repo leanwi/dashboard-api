@@ -22,7 +22,7 @@ var status = {
     });
   },
   getActiveJobs: function(req, res) {
-    db.collection('jobs').find({state: 1}).sort({start: -1}).toArray(function(err, results) {
+    db.collection('jobs').find({state: "Active"}).sort({start: -1}).toArray(function(err, results) {
       if(err) {
         console.log(err);
         res.status(500).send('There was an error');
@@ -33,7 +33,7 @@ var status = {
     });
   },
   getFailedJobs: function(req, res) {
-    db.collection('jobs').find({state: 2}).sort({start: -1}).toArray(function(err, results) {
+    db.collection('jobs').find({state: "Error"}).sort({start: -1}).toArray(function(err, results) {
       if(err) {
         console.log(err);
         res.status(500).send('There was an error');
@@ -44,7 +44,8 @@ var status = {
     });
   },
   getRecentJobs: function(req, res) {
-    db.collection('jobs').find().sort({start: -1}).limit(req.params.last || 1000).toArray(function(err, results) {
+    console.log(req.params.last);
+    db.collection('jobs').find().sort({start: -1}).limit(parseInt(req.params.last) || 1000).toArray(function(err, results) {
       if(err) {
         console.log(err);
         res.status(500).send('There was an error');

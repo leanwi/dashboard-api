@@ -12,6 +12,7 @@
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "^1.14.1",
     "csv": "^0.4.6",
+    "excel-export": "^0.4.1",
     "express": "^4.13.3",
     "jwt-simple": "^0.4.0",
     "moment": "^2.10.6",

@@ -16,6 +16,7 @@ else {
   var app = express();
    
   app.use(logger('dev'));
+  app.use(bodyParser.urlencoded({}));
   app.use(bodyParser.json({limit: '100mb'}));
    
   app.all('/*', function(req, res, next) {

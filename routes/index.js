@@ -6,6 +6,7 @@ var action = require('./action.js');
 var library = require('./library.js');
 var command = require('./command.js');
 var status = require('./status.js');
+var util = require('./util.js');
  
 /*
  * Routes that can be accessed by anyone
@@ -15,6 +16,7 @@ router.get('/api/v1/libraries', library.getAll);
 router.get('/api/v1/libraries/:code', library.getOne);
 router.get('/api/v1/actions/:action/:start/:end', action.getAll); 
 router.get('/api/v1/actions/:action/:start/:end/:code', action.getLibrary); 
+router.post('/api/v1/util/charttoexcel', util.toExcel); 
 
 /*
  * Routes that can be accessed only by autheticated users

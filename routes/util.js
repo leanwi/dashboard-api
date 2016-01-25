@@ -21,7 +21,6 @@ var util = {
     res.setHeader('Content-disposition', 'attachment; filename=' + chart.options.title + '.xlsx');
     res.setHeader('Content-type', 'application/vnd.openxlmformats');
     res.end(excel.execute(conf), 'binary');
-    // res.send('ok');
   }
 }
 

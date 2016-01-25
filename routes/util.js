@@ -18,11 +18,6 @@ var util = {
       conf.cols = [{caption:'Labels', type: 'string'},{caption:'Values', type: 'number'}];
     }
     
-    
-    console.log(chart);
-    
-    
-    
     res.setHeader('Content-disposition', 'attachment; filename=' + chart.options.title + '.xlsx');
     res.setHeader('Content-type', 'application/vnd.openxlmformats');
     res.end(excel.execute(conf), 'binary');

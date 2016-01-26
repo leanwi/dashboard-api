@@ -4,6 +4,7 @@ This NodeJS backend is meant to work with [Library Statistical Dashboard - Front
 
 ## Installation
 Install prerequisites:
+
 1. [nodejs](https://nodejs.org/en/)
 2. [MongoDB](https://www.mongodb.org) (this can be installed on a different server)
 

@@ -18,7 +18,7 @@ var command = {
   upload: function(req, res) {
     var uploadSuccesses = 0;
 
-    if(req.body) {
+    if(req.body && req.body.rows.length > 0) {
       var recordType = req.body.type;
       startJob(recordType, startUpload);
       db.collection(recordType).createIndex({action_date: -1, library_code: 1}, {background: true});

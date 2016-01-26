@@ -3,10 +3,13 @@
 This NodeJS backend is meant to work with [Library Statistical Dashboard - Frontend](https://github.com/glfalkenberg/dashboard-www). Feel free to roll your own.
 
 ## Installation
-Install [nodejs](https://nodejs.org/en/). 
+Install prerequisites:
+1. [nodejs](https://nodejs.org/en/)
+2. [MongoDB](https://www.mongodb.org) (this can be installed on a different server)
+
+Clone this repository to a directory on your server.
 
 ```bash
-# Clone this repository to a directory on your server.
 $ git clone https://github.com/glfalkenberg/dashboard-api.git /opt/dashboard/api
 ```
 
